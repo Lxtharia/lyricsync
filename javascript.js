@@ -714,11 +714,12 @@ $("#hintsButton").click(() => {
             "Single click on a line to start syncing from it\n" +
             "Double click on a line to change its content\n" +
             " \n" +
-            "K: pause/play\n" +
-            "J: -2s\nL: +2s\n" +
+            "Space: pause/play\n" +
+            "J: select next\nK: select prev\n" +
+            "H: -2s\nL: +2s\n" +
             "Arrow right: +5s\n" +
             "Arrow left: -5s\n" +
-            "Shift/Space: Sync Line"
+            "P/Shift: Sync Line"
     );
 });
 
@@ -735,6 +736,13 @@ $("#backwardButton").click(function () {
 $("#forwardButton").click(function () {
     seek(+10);
 });
+
+// NAVIGATING FUNCTIONS ---
+function jumpLine(relativeNumber) {
+    tableLineClicked(
+        Math.max(0,selectedTableRow+relativeNumber)
+    )
+}
 
 //stores the id of the max line synced in order to keep track of where the user is up to
 let maxLineSynced = 0;
@@ -1255,51 +1263,65 @@ function download(filename, text) {
     document.body.removeChild(element);
 }
 
+function anyKeyMatches(unicode, ...anyof) {
+    return anyof.some((v) => {
+            if (typeof v === "string") {
+                return v.charCodeAt(0) == unicode
+            } else {
+                return v == unicode
+            }
+        })
+}
+
+const LEFT_ARROW = 37
+const UP_ARROW = 38
+const RIGHT_ARROW = 39
+const DOWN_ARROW = 40
+const SPACE = 32
+const SHIFT = 16
 // KEY CONTROLS
 $(document).keydown(function (e) {
     let unicode = e.charCode ? e.charCode : e.keyCode;
+    let is_editing = editingWhatElement != -1
 
-    if (editingWhatElement != -1) {
+    if (is_editing) {
         return;
     }
 
+    let matchKey = (...keys) => { return anyKeyMatches(unicode, ...keys);}
+
     // if you want unicode code for any key, just un-comment this:
-    //console.log(unicode)
+    console.log(unicode)
     // right arrow
-    if (unicode == 39) {
+    if (matchKey(RIGHT_ARROW)) {
         seek(+5);
     }
     // left arrow
-    else if (unicode == 37) {
+    else if (matchKey(LEFT_ARROW)) {
         seek(-5);
     }
-    // J
-    else if (unicode == 74) {
+    else if (matchKey("H")) {
         seek(-2);
     }
-    // L
-    else if (unicode == 76) {
+    else if (matchKey("J")) {
+        jumpLine(+1);
+    }
+    else if (matchKey("K")) {
+        jumpLine(-1);
+    }
+    else if (matchKey("L")) {
         seek(+2);
     }
     //Enter
     else if (unicode == 13) {
         finishEditingElement();
-    } else if (unicode == 75) {
-        $("#playButton").click();
     }
     // Spacebar
-    else if (unicode == 32) {
-        //if the user isnt editing an element then enable spacebar
-        if (editingWhatElement == -1) {
-            syncLine();
-        }
+    else if (matchKey(SPACE)) {
+        $("#playButton").click();
     }
-    //shift
-    else if (unicode == 16) {
-        //if the user isnt editing an element then enable shift key
-        if (editingWhatElement == -1) {
-            syncLine();
-        }
+    else if (matchKey("P", SHIFT) && !is_editing) {
+        syncLine();
     }
 });
 
