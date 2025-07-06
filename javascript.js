@@ -87,8 +87,8 @@ function highlightTopBarButton(dehighlightOrHighlight, buttonId) {
         alert("Error thrown, check logs.");
         throw new Error(
             "Parameter buttonId has value" +
-                buttonId +
-                "\nof which a corresponding element with ID was not found."
+            buttonId +
+            "\nof which a corresponding element with ID was not found."
         );
     }
 
@@ -106,8 +106,8 @@ function highlightTopBarButton(dehighlightOrHighlight, buttonId) {
         alert("Error thrown, check logs.");
         throw new Error(
             "Parameter dehighlightOrHighlight has value " +
-                dehighlightOrHighlight +
-                "\nof which is not a valid, only 'highlight' or 'dehighlight' are valid parameters."
+            dehighlightOrHighlight +
+            "\nof which is not a valid, only 'highlight' or 'dehighlight' are valid parameters."
         );
     }
 }
@@ -157,8 +157,8 @@ function redHighlightTopBarButton(dehighlightOrHighlight, buttonId) {
         alert("Error thrown, check logs.");
         throw new Error(
             "Parameter buttonId has value" +
-                buttonId +
-                "\nof which a corresponding element with ID was not found."
+            buttonId +
+            "\nof which a corresponding element with ID was not found."
         );
     }
 
@@ -170,8 +170,8 @@ function redHighlightTopBarButton(dehighlightOrHighlight, buttonId) {
         alert("Error thrown, check logs.");
         throw new Error(
             "Parameter dehighlightOrHighlight has value" +
-                dehighlightOrHighlight +
-                "\nof which a corresponding element with ID was not found."
+            dehighlightOrHighlight +
+            "\nof which a corresponding element with ID was not found."
         );
     }
 }
@@ -461,7 +461,7 @@ $("#topBarSyncLinesButton").click(() => {
 async function showHintsAfter() {
     await asyncReturnPromiseAfter(1500);
     displayWarning(
-        "Hint: Press shift/space to sync lines\ninstead of clicking 'Sync' button",
+        "Hint: Press P/shift to sync lines\ninstead of clicking 'Sync' button",
         5500,
         "#1f6934",
         "white"
@@ -711,15 +711,15 @@ function playButtonCLicked() {
 $("#hintsButton").click(() => {
     alert(
         "" +
-            "Single click on a line to start syncing from it\n" +
-            "Double click on a line to change its content\n" +
-            " \n" +
-            "Space: pause/play\n" +
-            "J: select next\nK: select prev\n" +
-            "H: -2s\nL: +2s\n" +
-            "Arrow right: +5s\n" +
-            "Arrow left: -5s\n" +
-            "P/Shift: Sync Line"
+        "Single click on a line to start syncing from it\n" +
+        "Double click on a line to change its content\n" +
+        " \n" +
+        "Space: pause/play\n" +
+        "J: select next\nK: select prev\n" +
+        "H: -2s\nL: +2s\n" +
+        "Arrow right: +5s\n" +
+        "Arrow left: -5s\n" +
+        "P/Shift: Sync Line"
     );
 });
 
@@ -740,7 +740,7 @@ $("#forwardButton").click(function () {
 // NAVIGATING FUNCTIONS ---
 function jumpLine(relativeNumber) {
     tableLineClicked(
-        Math.max(0,selectedTableRow+relativeNumber)
+        Math.max(0, selectedTableRow + relativeNumber)
     )
 }
 
@@ -795,33 +795,38 @@ function syncLine() {
         finishEditingElement();
 
         //scroll to keep the element in the center of the screen
-        try {
-            Element.prototype.documentOffsetTop = function () {
-                return (
-                    this.offsetTop +
-                    (this.offsetParent
-                        ? this.offsetParent.documentOffsetTop()
-                        : 0)
-                );
-            };
-            let top =
-                document
-                    .getElementById("tableTimeColumn" + selectedTableRow)
-                    .documentOffsetTop() -
-                window.innerHeight / 2;
-            window.scrollTo({ top: top, behavior: "smooth" });
-        } catch (e) {
-            console.log("window.scrollTo error\n\n" + e);
-        }
+        scrollToTableElement(selectedTableRow)
     } else {
         displayWarning(
             "A timestamp preceding the current one has a" +
-                " greater timestamp than the current one, please either change that or " +
-                "wait until the audio reaches a higher timestamp",
+            " greater timestamp than the current one, please either change that or " +
+            "wait until the audio reaches a higher timestamp",
             4000,
             "default",
             "default"
         );
+    }
+}
+
+//Scrolls to a table element
+function scrollToTableElement(tableRow) {
+    try {
+        Element.prototype.documentOffsetTop = function () {
+            return (
+                this.offsetTop +
+                (this.offsetParent
+                    ? this.offsetParent.documentOffsetTop()
+                    : 0)
+            );
+        };
+        let top =
+            document
+                .getElementById("tableTimeColumn" + tableRow)
+                .documentOffsetTop() -
+            window.innerHeight / 2;
+        window.scrollTo({ top: top, behavior: "smooth" });
+    } catch (e) {
+        console.log("window.scrollTo error\n\n" + e);
     }
 }
 
@@ -1203,8 +1208,8 @@ function detectFirefoxMobile() {
 function finishItOff() {
     //if user is on firefox mobile warn them to change the extension of the file
     if (detectFirefoxMobile()) {
-        alert("We've detected that you're on Firefox Mobile. Firefox Mobile may automatically change .lrc extensions to .txt as an antivirus measure."+
-        "\n\nPlease change the extension of the file to from .txt back to .lrc");
+        alert("We've detected that you're on Firefox Mobile. Firefox Mobile may automatically change .lrc extensions to .txt as an antivirus measure." +
+            "\n\nPlease change the extension of the file to from .txt back to .lrc");
     }
 
     finishEditingElement();
@@ -1265,12 +1270,12 @@ function download(filename, text) {
 
 function anyKeyMatches(unicode, ...anyof) {
     return anyof.some((v) => {
-            if (typeof v === "string") {
-                return v.charCodeAt(0) == unicode
-            } else {
-                return v == unicode
-            }
-        })
+        if (typeof v === "string") {
+            return v.charCodeAt(0) == unicode
+        } else {
+            return v == unicode
+        }
+    })
 }
 
 const LEFT_ARROW = 37
@@ -1288,7 +1293,7 @@ $(document).keydown(function (e) {
         return;
     }
 
-    let matchKey = (...keys) => { return anyKeyMatches(unicode, ...keys);}
+    let matchKey = (...keys) => { return anyKeyMatches(unicode, ...keys); }
 
     // if you want unicode code for any key, just un-comment this:
     console.log(unicode)
@@ -1303,11 +1308,15 @@ $(document).keydown(function (e) {
     else if (matchKey("H")) {
         seek(-2);
     }
-    else if (matchKey("J")) {
+    else if (matchKey("J") | matchKey(DOWN_ARROW)) {
         jumpLine(+1);
+        //Scroll to the table line/element we went to
+        scrollToTableElement(selectedTableRow)
     }
-    else if (matchKey("K")) {
+    else if (matchKey("K") | matchKey(UP_ARROW)) {
         jumpLine(-1);
+        //Scroll to the table line/element we went to
+        scrollToTableElement(selectedTableRow)
     }
     else if (matchKey("L")) {
         seek(+2);
@@ -1324,6 +1333,17 @@ $(document).keydown(function (e) {
         syncLine();
     }
 });
+
+//If user is on screen 4, the up and down arrows are used to go up and down the table lines,
+//This disables the functionality of scrolling the page
+document.addEventListener('keydown', function (event) {
+    if (whatScreenIsUserCurrentlyOn === 4) {
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            event.preventDefault();
+        }
+    }
+});
+
 
 //warn user to fill out field
 async function WarnUserToFillOutField(id) {
